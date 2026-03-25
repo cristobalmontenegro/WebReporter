@@ -1,0 +1,16 @@
+# Configuration
+config.local.php
+config.php.bak
+
+# Logs
+error_log
+php_errors.log
+
+# Temporary / Data
+*.csv
+current_headers.txt
+target_headers.txt
+
+# OS Files
+.DS_Store
+Thumbs.db

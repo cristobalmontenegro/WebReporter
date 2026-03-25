@@ -1,0 +1,70 @@
+<?php
+/**
+ * EXAMPLE Configuration File for WebReporter PHP
+ * 
+ * Instructions:
+ * 1. Copy this file to 'config.local.php'.
+ * 2. Edit 'config.local.php' with your own database credentials and report definitions.
+ */
+
+// 1. Database configuration
+/**
+ * SECURITY BEST PRACTICE:
+ * The application's main use case is reading data (SELECT).
+ * However, the User Management module requires UPDATE permissions on the 'user_table'.
+ * We recommend creating a database user that:
+ * - Has SELECT permissions on all tables/views you want to report on.
+ * - Has SELECT and UPDATE permissions on the 'user_table'.
+ */
+define('DB_HOST', 'localhost');
+define('DB_PORT', 3306);
+define('DB_USER', 'my_report_user');
+define('DB_PASS', 'my_secure_password');
+define('DB_NAME', 'my_reporting_db');
+
+// 2. Application configuration
+define('APP_NAME', 'WebReporter PHP');
+define('APP_LANG', 'en'); // 'en' or 'es'
+
+// 3. Report definitions
+$REPORTS = [
+    'advanced_example' => [
+        'title' => 'Complex SQL Example',
+        'description' => 'Shows how to use JOINs, Aliases, and calculations in reports.',
+        'sql' => "SELECT 
+                    o.id AS `Order #`, 
+                    u.realname AS `Customer`, 
+                    o.total AS `Amount`, 
+                    DATE_FORMAT(o.created_at, '%Y-%m-%d') AS `Date`
+                  FROM orders o
+                  JOIN user_table u ON o.user_id = u.id
+                  WHERE o.status = 'completed'",
+        'icon' => 'fas fa-shopping-cart'
+    ]
+];
+
+// 4. Chart Definitions
+/**
+ * Charts support 'bar' and 'pie' types.
+ * For bar charts, you can define multiple 'datasets' with custom colors.
+ */
+$CHARTS = [
+    'multi_data_chart' => [
+        'title' => 'Financial Overview',
+        'description' => 'Bar chart comparing multiple data points per category.',
+        'report' => 'advanced_example',
+        'type' => 'bar',
+        'sql' => "SELECT 
+                    category, 
+                    SUM(income) as inc, 
+                    SUM(expense) as exp 
+                  FROM financial_data 
+                  GROUP BY category",
+        'label_col' => 'category',
+        'datasets' => [
+            ['label' => 'Income', 'col' => 'inc', 'color' => '#007bff'], // Custom Blue
+            ['label' => 'Expense', 'col' => 'exp', 'color' => '#dc3545']  // Custom Red
+        ]
+    ]
+];
+?>
